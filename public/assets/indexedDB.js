@@ -9,7 +9,6 @@ request.onupgradeneeded = function(event) {
  
  request.onsuccess = function(event) {
    db = event.target.result;
- " " "
    if (navigator.onLine) {
      checkDatabase();
    }
@@ -19,3 +18,12 @@ request.onupgradeneeded = function(event) {
    console.log(event.target.errorCode);
  };
  
+ function saveRecord(record) {
+    const transaction = db.transaction(["pending"], "readwrite")
+
+
+    const store = transaction.objectStore("pending")
+    store.add(record);
+    
+  }
+  
