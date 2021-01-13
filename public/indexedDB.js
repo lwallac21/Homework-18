@@ -11,6 +11,7 @@ request.onupgradeneeded = function(event) {
    db = event.target.result;
    if (navigator.onLine) {
      checkDatabase();
+     console.log("online!!!")
    }
  };
  
