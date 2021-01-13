@@ -3,6 +3,7 @@ const request = indexedDB.open("budget", 1);
 
 request.onupgradeneeded = function(event) {
    const db = event.target.result;
+   console.log(db)
    db.createObjectStore("pending", { autoIncrement: true });
  };
  
@@ -14,8 +15,8 @@ request.onupgradeneeded = function(event) {
  };
  
  request.onerror = function(event) {
-   console.log(event.target.errorCode);
- };
+   console.log(event.target.errorCode)
+ }
  
  function saveRecord(tx) {
     const transaction = db.transaction(["pending"], "readwrite")
@@ -26,4 +27,32 @@ request.onupgradeneeded = function(event) {
     
   }
   
+  function checkDatabase() {
+    const transaction = db.transaction(["pending"], "readwrite")
+    const store = transaction.objectStore("pending")
+    console.log(store)
+    const getAll = store.getAll();
+    console.log(getAll)
+    getAll.onsuccess = function() {
+      if (getAll.result.length > 0) {
+        fetch("/api/transaction/bulk", {
+          method: "POST",
+          body: JSON.stringify(getAll.result),
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json"
+          }
+
+        })
+        .then(response => response.json())
+        .then(() => {
+          const transaction = db.transaction(["pending"], "readwrite")
+  
+          const store = transaction.objectStore("pending")
+        });
+      }
+    };
+  }
+  
+  checkDatabase()
   
