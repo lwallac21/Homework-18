@@ -55,4 +55,5 @@ request.onupgradeneeded = function(event) {
     };
   }
   
-  checkDatabase()
+
+  window.addEventListener("online", checkDatabase);
